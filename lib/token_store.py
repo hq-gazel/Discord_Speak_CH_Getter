@@ -51,11 +51,16 @@ def is_valid(token, *, leeway=60, now=None) -> bool:
 
 
 def _post_token(payload: dict, *, timeout=15) -> dict:
+    # urllib既定の User-Agent (Python-urllib/x.y) は Discord 側の WAF に
+    # bot として弾かれ 403 Forbidden になるため、識別可能な値を明示する。
     data = urllib.parse.urlencode(payload).encode("utf-8")
     req = urllib.request.Request(
         TOKEN_URL,
         data=data,
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "obs-discord-vc/1.0",
+        },
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=timeout) as resp:
