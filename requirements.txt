@@ -1,0 +1,6 @@
+# Runtime (OBS が指す Python に導入する)
+#   uv pip install --python "<OBSのPython>\python.exe" -r requirements.txt
+pypresence==4.6.1
+
+# --- dev (テスト用。lib 純関数は pypresence 非依存なのでどの Python でも可) ---
+pytest==8.3.4

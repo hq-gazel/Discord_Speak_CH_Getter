@@ -1,0 +1,18 @@
+[project]
+name = "discord-ch-to-obs"
+version = "0.1.0"
+description = "Sync the current Discord voice channel to an OBS browser source via the StreamKit overlay URL"
+requires-python = ">=3.9"
+dependencies = ["pypresence==4.6.1"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = ["E501"]

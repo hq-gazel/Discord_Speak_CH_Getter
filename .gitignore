@@ -1,0 +1,43 @@
+# --- Secrets / 秘匿情報 ---
+# Discord Client ID/Secret は OBS スクリプトのプロパティ(GUI)で設定し、
+# OBS のシーンコレクション設定ファイルに保存される (本リポジトリ管理外)。
+cfg/token.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.Python
+
+# --- Virtual env (本プロジェクトは venv 不使用だが念のため) ---
+.venv/
+venv/
+env/
+
+# --- Test / Lint cache ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*~
+
+# --- OS (Windows / WSL / macOS) ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# --- Logs ---
+*.log
+logs/

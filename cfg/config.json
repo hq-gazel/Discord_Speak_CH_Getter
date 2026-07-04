@@ -1,0 +1,15 @@
+{
+  "mode": "auto",
+  "source_name": "話者",
+  "redirect_uri": "http://localhost:3000/callback",
+  "manual": {
+    "guild_id": "",
+    "channel_id": ""
+  },
+  "streamkit": {
+    "icon": true,
+    "online": true,
+    "logo": "white"
+  },
+  "on_leave": "keep"
+}
