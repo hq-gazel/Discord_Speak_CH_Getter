@@ -26,7 +26,7 @@ from lib.url_builder import build_streamkit_url  # noqa: E402
 CONFIG_PATH = os.path.join(_HERE, "cfg", "config.json")
 TOKEN_PATH = os.path.join(_HERE, "cfg", "token.json")
 
-TICK_MS = 1000
+TICK_MS = 20000
 
 _state = {
     "cfg": None,
