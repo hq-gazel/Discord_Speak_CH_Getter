@@ -81,17 +81,26 @@ def _start_manual():
     _apply(cfg.manual_guild_id, cfg.manual_channel_id)
 
 
-def _load_and_run():
+def _parse_config():
+    """config.json + OBS 入力を検証して _state["cfg"] に格納する (接続は開始しない)。"""
     try:
         raw_cfg = load_config_file(CONFIG_PATH)
         cfg = build_app_config(raw_cfg, _state["client_id"], _state["client_secret"])
     except ConfigError as exc:
         _log(f"[ERROR] 設定不備: {exc}")
-        return
+        return None
     _state["cfg"] = cfg
     if not _state["source_name"]:
         _state["source_name"] = cfg.source_name
     _log(f"[INFO] mode={cfg.mode} source='{_state['source_name']}'")
+    return cfg
+
+
+def _load_and_run():
+    """設定を読み込み、mode に応じて同期を開始する (Discord IPC 接続を伴う)。"""
+    cfg = _parse_config()
+    if cfg is None:
+        return
     if cfg.mode == "manual":
         _start_manual()
     else:
@@ -114,7 +123,9 @@ def script_description():
     return (
         "現在の Discord VC を StreamKit Voice Widget URL に変換し、指定ブラウザソースへ自動反映します。\n"
         "下の欄に Discord アプリの Client ID / Client Secret を入力してください"
-        " (mode=auto の場合のみ必須)。詳細は README を参照。"
+        " (mode=auto の場合のみ必須)。\n"
+        "スクリプト読み込み時には接続しません。「Discord接続を開始」ボタンを押した時のみ"
+        " Discord IPC に接続します (常時接続によるリソース消費を避けるため)。詳細は README を参照。"
     )
 
 
@@ -136,6 +147,7 @@ def script_properties():
         props, "discord_client_secret", "Discord Client Secret", obs.OBS_TEXT_PASSWORD
     )
     obs.obs_properties_add_button(props, "reload", "設定リロード", _on_reload)
+    obs.obs_properties_add_button(props, "start", "Discord接続を開始", _on_start)
     obs.obs_properties_add_text(
         props,
         "status_info",
@@ -165,7 +177,17 @@ def script_update(settings):
 
 
 def _on_reload(props, prop):
+    """config.json / OBS 入力値を再読込するだけ (Discord には接続しない)。"""
     _log("[INFO] 設定リロード")
+    _teardown()
+    _parse_config()
+    return True
+
+
+def _on_start(props, prop):
+    """常時接続はリソースの無駄なので、押した時だけ Discord IPC 接続を開始する。
+    未認証ならこの中 (VoiceWatcher._authenticate) で認可ダイアログも自動的に走る。"""
+    _log("[INFO] Discord接続を開始します。")
     _teardown()
     _load_and_run()
     return True
@@ -173,7 +195,8 @@ def _on_reload(props, prop):
 
 def script_load(settings):
     _sync_state_from_settings(settings)
-    _load_and_run()
+    _parse_config()
+    _log("[INFO] 準備完了。「Discord接続を開始」ボタンを押してください。")
 
 
 def script_unload():
