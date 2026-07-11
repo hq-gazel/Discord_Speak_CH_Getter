@@ -36,6 +36,7 @@ _state = {
     "client_secret": "",
     "last_applied": None,  # 直近で反映した (guild_id, channel_id)
     "running_timer": False,
+    "auto_connect_on_load": False,
 }
 
 
@@ -124,8 +125,10 @@ def script_description():
         "現在の Discord VC を StreamKit Voice Widget URL に変換し、指定ブラウザソースへ自動反映します。\n"
         "下の欄に Discord アプリの Client ID / Client Secret を入力してください"
         " (mode=auto の場合のみ必須)。\n"
-        "スクリプト読み込み時には接続しません。「Discord接続を開始」ボタンを押した時のみ"
-        " Discord IPC に接続します (常時接続によるリソース消費を避けるため)。詳細は README を参照。"
+        "「OBS起動時に自動接続」がOFF (既定) の場合、スクリプト読み込み時には接続しません。"
+        "「Discord接続を開始」ボタンを押した時のみ Discord IPC に接続します"
+        " (常時接続によるリソース消費を避けるため)。ONにすると、OBS起動/スクリプト読込時に"
+        " 自動的に接続を開始します。詳細は README を参照。"
     )
 
 
@@ -146,6 +149,7 @@ def script_properties():
     obs.obs_properties_add_text(
         props, "discord_client_secret", "Discord Client Secret", obs.OBS_TEXT_PASSWORD
     )
+    obs.obs_properties_add_bool(props, "auto_connect_on_load", "OBS起動時に自動接続")
     obs.obs_properties_add_button(props, "reload", "設定リロード", _on_reload)
     obs.obs_properties_add_button(props, "start", "Discord接続を開始", _on_start)
     obs.obs_properties_add_text(
@@ -161,6 +165,7 @@ def script_defaults(settings):
     obs.obs_data_set_default_string(settings, "source_name", "話者")
     obs.obs_data_set_default_string(settings, "discord_client_id", "")
     obs.obs_data_set_default_string(settings, "discord_client_secret", "")
+    obs.obs_data_set_default_bool(settings, "auto_connect_on_load", False)
 
 
 def _sync_state_from_settings(settings):
@@ -170,6 +175,7 @@ def _sync_state_from_settings(settings):
         _state["last_applied"] = None  # 新しいソースへ次の tick で再反映させる
     _state["client_id"] = obs.obs_data_get_string(settings, "discord_client_id")
     _state["client_secret"] = obs.obs_data_get_string(settings, "discord_client_secret")
+    _state["auto_connect_on_load"] = obs.obs_data_get_bool(settings, "auto_connect_on_load")
 
 
 def script_update(settings):
@@ -195,8 +201,13 @@ def _on_start(props, prop):
 
 def script_load(settings):
     _sync_state_from_settings(settings)
-    _parse_config()
-    _log("[INFO] 準備完了。「Discord接続を開始」ボタンを押してください。")
+    if _state["auto_connect_on_load"]:
+        _log("[INFO] 「OBS起動時に自動接続」が有効です。自動的に接続を開始します。")
+        _teardown()
+        _load_and_run()
+    else:
+        _parse_config()
+        _log("[INFO] 準備完了。「Discord接続を開始」ボタンを押してください。")
 
 
 def script_unload():

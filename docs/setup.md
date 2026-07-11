@@ -64,6 +64,10 @@ uv pip install --python "C:\Users\<you>\AppData\Local\Programs\Python\Python312\
    （ドロップダウンには既存の browser_source が並ぶ。任意入力も可）。
 3. **Discord Client ID** / **Discord Client Secret** の欄に手順 1 の値を入力する
    （パスワード欄としてマスク表示される。OBS のシーンコレクション設定に保存される）。
+   - **「OBS起動時に自動接続」** チェックボックスは既定 **OFF**。OFF のままだと
+     従来通りスクリプト読込時には接続せず、**[Discord接続を開始]** ボタンを押すまで
+     Discord IPC に接続しない。ON にすると、OBS起動時/スクリプト読込時に
+     ボタン操作なしで自動的に接続を開始する。
 4. VC に参加すると、選択したブラウザソースの URL が StreamKit URL に自動更新される。
 5. 設定 (`cfg/config.json` や Client ID/Secret) を変更したら、プロパティの **[設定リロード]** を押す。
 
@@ -77,5 +81,6 @@ uv pip install --python "C:\Users\<you>\AppData\Local\Programs\Python\Python312\
 | ソース未検出の警告 | OBS プロパティで正しいブラウザソース名を選択しているか確認 |
 | URL が更新されない | [スクリプトログ] を開き `[OK]/[WARN]/[ERROR]` を確認 |
 | Client ID/Secret を入力しても反映されない | 入力後にプロパティの **[設定リロード]** を押したか確認 |
+| 自動接続をONにしたのに接続しない | OBS再起動、またはスクリプトの再読込 (一度削除して再追加) が必要 |
 
 ログは OBS の [ツール > スクリプト] 画面下部の **[スクリプトログ]** に出力される。
