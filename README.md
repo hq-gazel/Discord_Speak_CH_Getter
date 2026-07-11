@@ -45,7 +45,7 @@ VC を移動・入退室するたびに URL が自動で書き換わるので、
 | `source_name` | `"話者"` | 反映先ブラウザソース名 (OBS プロパティの選択が優先) |
 | `redirect_uri` | `"http://localhost:3000/callback"` | Developer Portal の Redirect と完全一致させる |
 | `manual.guild_id` / `manual.channel_id` | `""` | manual モード用の ID |
-| `streamkit.*` | 省略時は既定 | StreamKit overlay の表示オプション (`icon`/`online`/`logo`) |
+| `streamkit.*` | 省略時は既定 | StreamKit overlay の表示オプション (`icon`/`online`/`logo`/`small`) |
 | `on_leave` | `"keep"` | VC 退出時の挙動。`"keep"`=据え置き / `"blank"`=about:blank |
 
 秘匿情報 (`client_id` / `client_secret`) は `config.json` には書かず、**OBS スクリプトのプロパティ画面**に入力する。

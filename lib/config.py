@@ -17,7 +17,7 @@ DEFAULT_CONFIG = {
     "source_name": "話者",
     "redirect_uri": "http://localhost:3000/callback",
     "manual": {"guild_id": "", "channel_id": ""},
-    "streamkit": {"icon": True, "online": True, "logo": "white"},
+    "streamkit": {"icon": True, "online": True, "logo": "white", "small": False},
     "on_leave": "keep",
 }
 
@@ -109,6 +109,7 @@ def build_app_config(cfg: dict, client_id: str = "", client_secret: str = "") ->
             "icon": bool(streamkit.get("icon", True)),
             "online": bool(streamkit.get("online", True)),
             "logo": str(streamkit.get("logo", "white")),
+            "small": bool(streamkit.get("small", False)),
         },
         on_leave=on_leave,
         client_id=client_id,

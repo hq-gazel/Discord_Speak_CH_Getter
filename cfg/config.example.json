@@ -9,7 +9,8 @@
   "streamkit": {
     "icon": true,
     "online": true,
-    "logo": "white"
+    "logo": "white",
+    "small": false
   },
   "on_leave": "keep"
 }

@@ -13,6 +13,7 @@ def test_load_config_file_defaults(tmp_path):
     cfg = load_config_file(tmp_path / "nope.json")
     assert cfg["mode"] == "auto"
     assert cfg["streamkit"]["logo"] == "white"
+    assert cfg["streamkit"]["small"] is False
 
 
 def test_load_config_file_merge(tmp_path):
@@ -77,4 +78,15 @@ def test_streamkit_coercion():
     ac = build_app_config(
         {"mode": "manual", "manual": {"guild_id": "g", "channel_id": "c"}, "streamkit": {}}
     )
-    assert ac.streamkit == {"icon": True, "online": True, "logo": "white"}
+    assert ac.streamkit == {"icon": True, "online": True, "logo": "white", "small": False}
+
+
+def test_streamkit_small_true():
+    ac = build_app_config(
+        {
+            "mode": "manual",
+            "manual": {"guild_id": "g", "channel_id": "c"},
+            "streamkit": {"small": True},
+        }
+    )
+    assert ac.streamkit["small"] is True

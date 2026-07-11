@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 STREAMKIT_VOICE_BASE = "https://streamkit.discord.com/overlay/voice"
 
 
-def build_streamkit_url(guild_id, channel_id, *, icon=True, online=True, logo="white"):
+def build_streamkit_url(guild_id, channel_id, *, icon=True, online=True, logo="white", small=False):
     """guild_id / channel_id から StreamKit Voice Widget の URL を生成する。
 
     どちらかが欠ける (VC 外 / DM 通話など) 場合は None を返す。
@@ -19,6 +19,7 @@ def build_streamkit_url(guild_id, channel_id, *, icon=True, online=True, logo="w
             "icon": "true" if icon else "false",
             "online": "true" if online else "false",
             "logo": logo,
+            "small": "true" if small else "false",
         }
     )
     return f"{STREAMKIT_VOICE_BASE}/{guild_id}/{channel_id}?{query}"
